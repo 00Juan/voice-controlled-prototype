@@ -1,35 +1,35 @@
-# Control de Voz para Maqueta Industrial (PLC TIA Portal)
+# Voice Control for Industrial Mockup (TIA Portal PLC)
 
-Este proyecto consiste en el control por voz de una maqueta industrial programada con **Siemens TIA Portal**. El sistema permite operar la maqueta utilizando comandos de voz dictados desde una aplicación Android, que se comunica con una pasarela de hardware basada en un **ESP32** y un **Arduino**.
+This project consists of voice controlling an industrial mockup programmed with **Siemens TIA Portal**. The system allows operating the mockup using voice commands dictated from an Android application, which communicates with a hardware gateway based on an **ESP32** and an **Arduino**.
 
-## 🎥 Demostración
-Puedes ver el funcionamiento del sistema en este vídeo:
-[![Demostración en YouTube](https://img.youtube.com/vi/ovliQjpnDwM/0.jpg)](https://youtube.com/shorts/ovliQjpnDwM?feature=share)
-*(Haz clic en la imagen para ver el video)*
+## 🎥 Demonstration
+You can watch the system in action in this video:
+[![YouTube Demonstration](https://img.youtube.com/vi/ovliQjpnDwM/0.jpg)](https://youtube.com/shorts/ovliQjpnDwM?feature=share)
+*(Click the image to watch the video)*
 
-## 🛠️ Arquitectura del Sistema
+## 🛠️ System Architecture
 
-El flujo de comunicación es el siguiente:
+The communication flow is as follows:
 
-1. **Aplicación Android (MIT App Inventor):**
-   El usuario interactúa con la aplicación (o usa los botones manuales) y dicta los comandos de voz. La app se conecta por Bluetooth al ESP32.
+1. **Android Application (MIT App Inventor):**
+   The user interacts with the app (or uses manual buttons) and dictates voice commands. The app connects to the ESP32 via Bluetooth.
 2. **ESP32 (`0_Codigo_ESP32.cpp`):**
-   Recibe el string de texto vía Bluetooth. Parsea el texto buscando palabras clave (ej. "alimentar", "abrir", "cerrar", "subir", "bajar") y lo traduce a un código numérico (byte). Este código se envía al Arduino mediante un protocolo serie custom a través de un solo cable (pin 12).
+   Receives the text string via Bluetooth. It parses the text looking for keywords (e.g., "alimentar", "abrir", "bajar" in Spanish) and translates them into a numeric code (byte). This code is sent to the Arduino using a custom bit-banging serial protocol through a single wire (pin 12).
 3. **Arduino + ENC28J60 (`1_Codigo_Arduino.cpp`):**
-   Lee la trama de bits enviada por el ESP32, reconstruye el byte y lo expone como un registro (Input Register 50) en un servidor **Modbus TCP/IP**.
+   Reads the bit stream sent by the ESP32, reconstructs the byte, and exposes it as a register (Input Register 50) on a **Modbus TCP/IP** server.
 4. **PLC (TIA Portal):**
-   El autómata actúa como cliente Modbus TCP, lee el registro del Arduino y ejecuta la acción correspondiente en la maqueta industrial (cintas, pinzas, motores, desviadores, etc.).
+   The PLC acts as a Modbus TCP client, reads the register from the Arduino, and executes the corresponding action in the industrial mockup (conveyor belts, grippers, motors, diverters, etc.).
 
-## 📱 Aplicación Android
-La aplicación ha sido desarrollada utilizando **MIT App Inventor**. Dispone de una interfaz gráfica intuitiva con botones representativos de las acciones de la maqueta y controles para activar el reconocimiento de voz y la conexión Bluetooth.
+## 📱 Android Application
+The application was developed using **MIT App Inventor**. It features an intuitive graphical interface with buttons representing the mockup actions and controls to activate voice recognition and Bluetooth connection.
 
-* El archivo fuente del proyecto de la app se encuentra en el repositorio: `2_CONTROL_VOZ_PLC_V2.aia` (o `3_CONTROL_VOZ_PLC_V2.aia`). Puedes importarlo en MIT App Inventor para editarlo.
+* The source file for the app project is located in the repository: `2_CONTROL_VOZ_PLC_V2.aia` (or similar `.aia` file). You can import it into MIT App Inventor to edit it.
 
-## 💻 Proyecto TIA Portal
-El proyecto original de TIA Portal supera los 200 MB, por lo que está alojado de forma externa para no sobrecargar el repositorio de Git.
-* 🔗 **[Descargar Proyecto TIA Portal (.zip)](https://drive.google.com/file/d/10he3JN_0ZLxJ5LxBvVIu5buYr1D3WUBP/view?usp=sharing)**
+## 💻 TIA Portal Project
+The original TIA Portal project exceeds 200 MB, so it is hosted externally to avoid overloading the Git repository.
+* 🔗 **[Download TIA Portal Project (.zip)](https://drive.google.com/file/d/10he3JN_0ZLxJ5LxBvVIu5buYr1D3WUBP/view?usp=sharing)**
 
-## 📂 Contenido del Repositorio
-* `0_Codigo_ESP32.cpp`: Firmware del microcontrolador ESP32 (Recepción BT y Parseo de Voz).
-* `1_Codigo_Arduino.cpp`: Firmware del Arduino Uno/Mega + Ethernet (Servidor Modbus TCP).
-* `*.aia`: Código fuente y diseño de la aplicación de MIT App Inventor.
+## 📂 Repository Contents
+* `0_Codigo_ESP32.cpp`: ESP32 microcontroller firmware (BT reception and Voice Parsing).
+* `1_Codigo_Arduino.cpp`: Arduino Uno/Mega + Ethernet firmware (Modbus TCP Server).
+* `*.aia`: Source code and design of the MIT App Inventor application.
